@@ -14,7 +14,7 @@ Independent cloud Chromium QA completed all three destinations with native keybo
 
 All three browser flights used Clear coast. Cockpit/chase, frozen pause time, native menu selection, manual input disconnecting autopilot, and restart confirmation were also checked. No JavaScript errors were recorded. These are automated keyboard cloud-browser results, not human or physical-device assessments.
 
-The [full flight report](https://greenkeewi.github.io/games/verification/reports/current/flight-qa.json) and [control confirmations](https://greenkeewi.github.io/games/verification/reports/current/controls-confirm.json) are published with the hub. These runs tested runtime commit `f99a43b2d5150481e1e2e89e6fa0da0b2f44921a`; this validation update changes documentation only. The hub's runtime hashes make that relationship explicit.
+The [full flight report](https://greenkeewi.github.io/games/verification/reports/current/flight-qa.json) and [control confirmations](https://greenkeewi.github.io/games/verification/reports/current/controls-confirm.json) are published with the hub. These runs tested runtime commit `f99a43b2d5150481e1e2e89e6fa0da0b2f44921a`; those runs remain evidence for the unchanged flight simulation. The subsequent map-only repair has its own browser evidence below; the hub record will be synchronized by its owner.
 
 ## Regression commands
 
@@ -27,3 +27,8 @@ Previous versions of this document referenced additional manual-flight, audio, v
 Repository publication and successful GitHub Pages jobs can be verified by exact commit. Direct HTTPS game loads from this cloud currently fail at its proxy with `CONNECT tunnel failed, response 403` / Chromium `net::ERR_TUNNEL_CONNECTION_FAILED`. Local browser success and Pages deployment success therefore do not constitute a successful live-origin gameplay test.
 
 The renderer uses cloud Chromium and software WebGL. No physical Chromebook frame rate, human speaker/headphone listening, fully manual browser route, separate-device Wi-Fi or physical control testing is claimed. This is a static single-player arcade flight game, with automatic trim/gear/flaps and recoverable approaches.
+
+
+## Optional map orientation repair
+
+The map-only release corrects the north/south projection so decreasing world Z moves upward and agrees with the compass-oriented aircraft icon. Actual Canvas2D observations pass all three routes and four cardinal movements (12 cases), including native map-setting navigation. The preceding inversion is captured separately. See `evidence/map-orientation/README.md`, raw before/after reports and gameplay captures. All 22 simulation tests still pass. These map checks use explicit location fixtures and do not claim new full-trip completion.

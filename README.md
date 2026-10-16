@@ -31,3 +31,6 @@ Assistance includes automatic trim, gear and flaps, self-levelling wings, gentle
 `window.flightTest` exposes production state and deterministic hooks for repeatable QA. Browser test reports distinguish accelerated scenario checks from actual normal-speed keyboard play. Browser scripts expect Playwright and Chromium at `/usr/bin/chromium`, as provided by the cloud QA environment. These are test tools and are not shipped to players. See `VALIDATION.md` for evidence and limits.
 
 The All games links point to https://greenkeewi.github.io/games/ . Existing taxi projects are separate and untouched.
+
+
+The optional route map uses north-up coordinates consistently: decreasing world Z moves upward, and the aircraft symbol rotates in the same compass direction as its movement. The 2026-10-16 map repair is verified for all three routes and all four cardinal headings with actual Canvas2D draw observations; see `evidence/map-orientation/README.md`.

@@ -1,0 +1,34 @@
+
+> cloudliner@1.0.0 test
+> node --test tests/*.test.js
+
+✔ every destination and condition completes its own actual runway and gate (564.048176ms)
+✔ go-around climbs and flies all circuit legs from high, low and off-centre approaches (275.421174ms)
+✔ manual final flare settles onto every selected field with its actual elevation (2.098701ms)
+✔ terrain protection uses the visible highland surface above sea level (0.532247ms)
+✔ arrival coaching uses runway-relative height and separates manual and crew instructions (14.17251ms)
+✔ airport transforms round-trip arbitrary orientations and elevation (0.208612ms)
+✔ conditions and flight identifiers validate, wind is deterministic and recovery preserves selection (0.916381ms)
+✔ landing grades reward gentle touchdown while preserving safe arrivals (0.405366ms)
+✔ an early touchdown and firm braking never strand the aircraft before the runway exit (66.564731ms)
+✔ a complete gate-to-gate autopilot flight at 60 Hz, with no safety recovery (143.231865ms)
+✔ low frame rates retain full mission progress and safe arrival (91.080143ms)
+✔ boarding prevents motion until doors are closed (2.197579ms)
+✔ manual taxi inputs accelerate, turn and brake without an active autopilot (4.440815ms)
+✔ doors remain locked at speed and away from the gate (1.693405ms)
+✔ manual runway takeoff is possible using only W, with assisted rotation (7.87808ms)
+✔ any flight input disengages autopilot and keeps a continuous aircraft state (47.293446ms)
+✔ paused simulation is stable, including mission timers and doors (1.174508ms)
+✔ landing practice autopilot completes approach and gate (40.190456ms)
+✔ a missed approach recovers safely, and can subsequently finish the flight (64.762413ms)
+✔ unsafe terrain/water contact recovers, rather than stranding the player (1.228999ms)
+✔ runway touchdown accepts safe alignment and scores the landing (0.196454ms)
+✔ boundary recovery and exact target data remain finite (0.154872ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1006.850826
