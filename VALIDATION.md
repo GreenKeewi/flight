@@ -1,41 +1,29 @@
-# Validation — 16 October 2026
+# Cloudliner validation
 
-## Production simulation
+## Current reproducible evidence
 
-`npm test`: 22 regressions pass, preserving the original 13 mission/control/safety checks and adding nine feature checks. The new checks exercise all three destinations in all three conditions from gate to gate, elevated field touchdown and parking, actual high/low/off-centre go-around circuits with manual override and crew re-engagement, unassisted final flare, visible highland terrain collision, runway-relative coaching, arbitrary airport-coordinate transforms, validated selections, deterministic wind, and early touchdown/braking followed by manual taxi reacceleration at all three airports. No automatic safety recoveries occur in the destination or go-around matrices.
+The current release record is maintained in the [games hub verification directory](https://greenkeewi.github.io/games/verification/). Its release manifest records repository commits, runtime hashes, exact-commit Pages build/deploy results, and the public-origin access limitation separately.
 
-Independent QA also completed an 18-case matrix covering every destination/condition combination, both directly and after a deliberate four-leg go-around. All reached their selected arrival gates with zero automatic recoveries. Landing scores were 469–476/500.
+Independent cloud Chromium QA completed all three destinations with native keyboard controls and the normal animation loop. No aircraft-position writes, simulation stepping, H recovery or G go-around were used in these flights. The crew autopilot flew the taxi, takeoff, route, approach, landing, rollout and arrival taxi; E opened the arrival doors to complete each trip.
 
-## Actual browser play
-
-All three destinations completed with native keyboard actions and the normal requestAnimationFrame loop, without state mutation or accelerated stepping: close doors → four departure taxi points → takeoff → every selected route point → approach → touchdown → rollout → arrival taxi → correct gate → open doors → debrief. Every journey had zero automatic recoveries and zero browser/resource errors.
-
-| Destination / conditions | Wall seconds | Simulation seconds | Landing /500 |
+| Destination | Wall seconds | Safety recoveries | Landing score |
 | --- | ---: | ---: | ---: |
-| Northport / Clear coast | 312.899 | 258.78 | 474 |
-| Ridgefield / Golden hour | 415.381 | 356.35 | 476 |
-| Palm Reach / Coastal breeze | 410.731 | 373.88 | 474 |
+| Northport / coastal | 418.73 | 0 | 474 / 500 |
+| Ridgefield / highland | 412.30 | 0 | 476 / 500 |
+| Palm Reach / islands | 397.39 | 0 | 475 / 500 |
 
-Software-GPU contention with concurrent independent QA slowed wall time; these are not hardware frame-rate measurements. Reports and phase screenshots are in `evidence/destinations-realtime/`. A further full Palm Reach / Coastal breeze journey on the frozen runtime exercised the deliberate native-keyboard go-around: after the complete departure and route, Up/Right inputs created a high, off-centre approach (recorded 253 m lateral offset, 250 m height). G flew all four circuit legs, a flight input briefly overrode the crew, Space re-engaged it, and the aircraft rejoined final, landed and reached the gate. It completed in 590.161 wall / 521.33 simulation seconds, with one go-around, zero safety recoveries/errors, landing 469/500 and score 1469. G incurred no score penalty. Full positions/progress and actual screenshots are in `evidence/goaround-realtime/`.
+All three browser flights used Clear coast. Cockpit/chase, frozen pause time, native menu selection, manual input disconnecting autopilot, and restart confirmation were also checked. No JavaScript errors were recorded. These are automated keyboard cloud-browser results, not human or physical-device assessments.
 
-An independent automated keyboard pilot completed the entire default route with autopilot off through native keyboard inputs and normal animation, with no state mutation or stepping: all four departure taxi points, takeoff, all five route points, manual approach/flare/braking, all four arrival taxi points and E at the gate. The flight used no autopilot, G or H; assisted air time was zero. It took 346.33 simulation seconds / 432.80 wall seconds under concurrent software rendering, with zero recoveries, a 430/500 landing, 8.37 m centreline offset and 1.66 m/s sink rate. Overall score 1430. Report: `/workspace/qa/reports/flight-complete-manual.json`. The first harness attempt held a turn key during screenshot capture; its evidence is retained, and the corrected driver releases keys before captures.
+The [full flight report](https://greenkeewi.github.io/games/verification/reports/current/flight-qa.json) and [control confirmations](https://greenkeewi.github.io/games/verification/reports/current/controls-confirm.json) are published with the hub. These runs tested runtime commit `f99a43b2d5150481e1e2e89e6fa0da0b2f44921a`; this validation update changes documentation only. The hub's runtime hashes make that relationship explicit.
 
-The fresh final browser smoke passed native destination/condition selection, elevated landing practice, cockpit/chase and essential HUD behavior, pause freeze, optional graphics/map/instruments, restart cancel/confirm with practice/route/condition preservation, G/manual override/crew re-engagement/H, and an explicitly accelerated production-physics gate-to-gate fixture with the correct destination debrief, saved best and result menu. Report: `evidence/smoke/report.json`.
+## Regression commands
 
-A labelled early-touchdown browser fixture independently verified the repaired braking edge case: after staging only the initial legal touchdown pose, native S stopped the aircraft before the exit and native W accelerated it onward in Arrival, with autopilot off and no recovery. All three destination regressions also pass.
+`npm test` runs 22 deterministic simulation and safety regressions, including all destinations and weather conditions, manual/crew guidance, wind correction, elevated approaches, go-arounds, terrain collision and manual flare. `tests/destinations-realtime.cjs` is a separate normal-animation keyboard runner. `tests/smoke.cjs` includes explicitly accelerated scenario checks; those do not establish real-time trip completion.
 
-Native keyboard QA also injected WebGL context loss: controls and restart stay blocked, simulation time freezes, resources restore, and the flight stays paused with Resume focused until the player chooses to continue. The unsupported-WebGL panel independently passed native Retry focus, Tab navigation to All games, focus wrap and Enter reload. The fresh independent UI/context retest is `/workspace/qa/reports/flight-route-ui-context-v2.json`; the unsupported-WebGL report is `evidence/no-webgl/report.json`.
+Previous versions of this document referenced additional manual-flight, audio, visual and context-loss reports stored only in another workspace. Those unavailable reports are not the basis of the current release's verified claims. The relevant scripts remain available for reproduction; only accessible evidence linked above is asserted here.
 
-The production procedural audio module passed native Chromium signal analysis at an exact matching source hash: idle RMS 0.0135, high power 0.0566, cockpit 0.0373 and maximum overlapping-transient peak 0.242, with finite signals, no clipping and no browser errors. Muted and inactive queued effects settled to zero. This module-state fixture created no 3D scene and does not claim human listening validation; actual keyboard sound/pause wiring was checked separately.
+## Publication and limits
 
-## Visuals and performance
+Repository publication and successful GitHub Pages jobs can be verified by exact commit. Direct HTTPS game loads from this cloud currently fail at its proxy with `CONNECT tunnel failed, response 403` / Chromium `net::ERR_TUNNEL_CONNECTION_FAILED`. Local browser success and Pages deployment success therefore do not constitute a successful live-origin gameplay test.
 
-Actual gameplay has been inspected at 1366×768 and 1024×600, with smaller-menu and Chromebook layouts checked independently. Terrain winding/lighting, coastline shallows, aircraft wing/nacelle detail, real 3D cockpit displays and human-scale airport scenery were revised. The essential HUD hides duplicate cockpit telemetry; approach height matches the selected runway elevation. Optional map and instruments, lighter graphics and reduced camera motion are available in Pause.
-
-Observed software-renderer draw calls vary with camera and visible scenery: the completed coastal journey recorded 70–167 across phases, with cruise observations around 112–123 and a separate cockpit observation 110. The earlier smaller world recorded 111 at cruise. These values describe render work, not physical Chromebook frame rate. The final runtime also shares one runway texture/material across the four fields, removing three duplicate large textures (about 32 MiB estimated storage including mipmaps).
-
-The menu image is an original generated illustration and is labelled accordingly. Gameplay screenshots are captured from the actual 3D game. Local evidence and reports are stored under `evidence/` and the independent `/workspace/qa` project; neither is required to run the static game.
-
-## Limits
-
-Testing uses this cloud environment's Chromium software renderer. No physical Chromebook performance, physical-device control assessment, or human speaker/headphone listening review is claimed. The game requires WebGL 2 and a keyboard. It is an assisted arcade flight model with automatic gear/flaps and recoverable approaches. This passenger game is single-player, static and backend-free. GitHub Pages publication and exact live-origin verification are coordinated by the parent task.
+The renderer uses cloud Chromium and software WebGL. No physical Chromebook frame rate, human speaker/headphone listening, fully manual browser route, separate-device Wi-Fi or physical control testing is claimed. This is a static single-player arcade flight game, with automatic trim/gear/flaps and recoverable approaches.
